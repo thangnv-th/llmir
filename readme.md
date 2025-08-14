@@ -1,50 +1,44 @@
-# 🖼️ Large language models based Image Restoration Agent
+# 🏆 Retrieval-Augmented Generation with Reward Optimization
 
-We explores the use of pretrained language models for **image restoration tasks** such as denoising, inpainting, and deblurring — all without retraining or modifying the underlying model weights.
+This framework enhances traditional retrieval-augmented generation by introducing a **learned reward model** that supervises retrieval quality based on human-aligned feedback. Instead of treating retrieval as a static or heuristic process, Reward-RAG **optimizes the retriever to produce contextually helpful documents** that lead to better generated answers.
 
 ---
 
 ## 🎯 Objective
 
-Repurpose LLMs for pixel-level reasoning tasks by:
+Move beyond top-k retrieval by training a **reward model** to rank or score retrieved documents based on their utility to the final output.
 
-- Encoding image corruption descriptions into structured prompts
-- Guiding restoration steps using autoregressive generation
-- Outputting either image tokens or restoration decisions
-
-ResLLM demonstrates that LLMs can **reason over visual artifacts** when paired with symbolic or token-based image representations.
+- Guide the retriever using feedback signals (human preference, score proxies)
+- Fine-tune retrieval embeddings to match helpfulness signals
+- Maintain plug-and-play compatibility with existing RAG pipelines
 
 ---
 
-## 🛠️ Key Features
+## 🔑 Key Features
 
-- **Training-free**: No model fine-tuning required
-- **Tokenized image input**: Converts images into structured sequences
-- **Restoration via prompting**: Generates restoration steps as text or token predictions
-- **Flexible decoding**: Outputs can be parsed into pixel values or restoration instructions
+- **Reward-driven supervision**: Uses a trainable reward function to evaluate document helpfulness
+- **Retriever tuning**: Backpropagates reward feedback to update embedding space
+- **Plug-and-play**: Works with any retriever (BM25, dense, hybrid)
+- **Alignment-aware**: Encourages grounded and answer-relevant retrievals
+
+---
+
+## 🛠️ System Components
+
+1. **Retriever**: Fetches top-k documents given a query
+2. **Reward Model**: Scores each document given query + answer
+3. **Gradient Feedback**: Updates retriever based on reward signal
+4. **Generator (LLM)**: Generates answers from selected context
 
 ---
 
 ## 📦 Installation
 
 ```bash
-cd resllm
+cd reward-rag
 pip install -r requirements.txt
 ```
 
+Recommended setup includes: PyTorch, SentenceTransformers, OpenAI API, HuggingFace Transformers.
+
 ---
-
-## 🖼️ Example Usage
-
-Run the restoration pipeline with a corrupted image:
-
-```bash
-python run_resllm.py --input noisy_image.png --task denoise
-```
-
-For visualization:
-
-```bash
-python visualize.py --input original.png --output restored.png
-```
-
